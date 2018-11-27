@@ -1,0 +1,39 @@
+* {
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	border: 0;
+}
+.title {
+	width: 100%;
+	color: white;
+	background: black;
+}
+#txt {
+	height: 25%;
+}
+.header {
+	width: 100%;
+}
+table {
+	border-collapse: collapse;
+}
+input {
+	width: 3em;
+}
+th {
+	font-weight: normal;
+	padding: 5px;
+	color: white;
+	background: gray;
+	border: 1px solid white;
+}
+td {
+	padding: 4px;
+	border: 1px solid gray;
+}
+textarea {
+	width: 100%;
+	resize: vertical;
+	border-bottom: 1px solid black;
+}
