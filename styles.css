@@ -5,9 +5,7 @@
 	border: 0;
 }
 .title {
-	width: 100%;
-	color: white;
-	background: black;
+	font-size: 25px;
 }
 #txt {
 	height: 25%;
@@ -25,7 +23,7 @@ th {
 	font-weight: normal;
 	padding: 5px;
 	color: white;
-	background: gray;
+	background: black;
 	border: 1px solid white;
 }
 td {
@@ -36,4 +34,5 @@ textarea {
 	width: 100%;
 	resize: vertical;
 	border-bottom: 1px solid black;
+	border-top: 1px solid black;
 }
