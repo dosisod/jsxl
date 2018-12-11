@@ -1,16 +1,17 @@
 window.onload=function() {
-	xl=new jsxl()
+	xl=new jsxl(16,16)
 	xl.init()
 }
 
 class jsxl {
-	constructor() {
+	constructor(x,y) {
 		this.table=document.getElementById("table")
 	
-		this.ROWS=16
-		this.COLS=16
+		this.ROWS=y
+		this.COLS=x
 
-		this.$=Array(this.ROWS).fill(0).map(x=>Array(this.COLS).fill(0)) //initializes the table
+		this.$=Array(this.ROWS).fill(0)
+		for (var i in this.$) { this.$[i]=Array(this.COLS).fill("") }
 	}
 	init() {
 		//does top header
@@ -29,6 +30,7 @@ class jsxl {
 		}
 		this.table.appendChild(temptr)
 
+		//makes all the rows
 		for (var i=0;i<this.ROWS;i++) { //for every row
 			var temptr=document.createElement("tr") //make a new tr
 			for (var j=0;j<=this.COLS;j++) { //fill each col with input box
@@ -40,7 +42,7 @@ class jsxl {
 				else {
 					var temptd=document.createElement("td")
 					var input=document.createElement("input")
-					input.id="R"+i+"-C"+j
+					input.id="R"+i+"-C"+(j-1)
 					temptd.appendChild(input)
 				}
 				temptr.appendChild(temptd)
