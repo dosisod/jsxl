@@ -10,8 +10,7 @@ class jsxl {
 		this.ROWS=y
 		this.COLS=x
 
-		this.$=Array(this.ROWS).fill(0)
-		for (var i in this.$) { this.$[i]=Array(this.COLS).fill("") }
+		this.data=this.newarr(this.ROWS,this.COLS)
 	}
 	init() {
 		//does top header
@@ -20,11 +19,11 @@ class jsxl {
 			var tempth=document.createElement("th")
 			if (i==0) { //if its 0, print an 'x'
 				tempth.innerHTML="x"
-				tempth.id="all"
+				tempth.id="JSXL_:"
 			}
 			else { //else print the index
 				tempth.innerHTML=(i-1)
-				tempth.id="C"+(i-1)
+				tempth.id="JSXL_:"+(i-1)
 			}
 			temptr.appendChild(tempth) //append it to table
 		}
@@ -37,12 +36,13 @@ class jsxl {
 				if (j==0) {
 					var temptd=document.createElement("th")
 					temptd.innerHTML=i
-					temptd.id="R"+i
+					temptd.id="JSXL_"+i+":"
 				}
 				else {
 					var temptd=document.createElement("td")
 					var input=document.createElement("input")
-					input.id="R"+i+"-C"+(j-1)
+					input.id="JSXL_"+i+":"+(j-1)
+					input.onchange=(e)=>{this.update(e)} //updates internal table when cell changes
 					temptd.appendChild(input)
 				}
 				temptr.appendChild(temptd)
@@ -50,9 +50,13 @@ class jsxl {
 			this.table.appendChild(temptr)
 		}
 	}
+	update(html) {
+		var cell=html.target.id.substr(5).split(":")
+		this.data[cell[0]][cell[1]]=html.target.value
+	}
 	newarr(y,x) {
-		var arr=Array(y).fill(0)
-		for (var i in arr) { arr[i]=Array(x).fill("") }
+		var arr=new Array(y).fill(0)
+		for (var i in arr) { arr[i]=new Array(x).fill("") }
 		return arr
 	}
 	safety(cord) { //prevents out of bound
@@ -64,14 +68,27 @@ class jsxl {
 		]
 	}
 	unpack(cord1, cord2) {
-		console.log(cord1,cord2)
 		var range=[...this.safety(cord1), ...this.safety(cord2)]
 		var ret=this.newarr(Math.abs(range[0]-range[2])+1,Math.abs(range[1]-range[3])+1)
-		console.log(ret)
 		for (var y in ret)
-			for (var x in y)
-				ret[y][x]=this.$[y][x]
+			for (var x in ret[y])
+				ret[y][x]=this.data[y][x]
 				
 		return ret
 	}
+	SUM(cord1, cord2) {
+		var arr=this.unpack(cord1, cord2)
+		var total=0
+		for (var y in arr)
+			for (var x in arr[y])
+				total+=Number(arr[y][x])
+				
+		return total
+	}
 }
+
+
+
+
+
+
