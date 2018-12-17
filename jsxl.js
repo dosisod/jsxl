@@ -4,7 +4,7 @@ window.onload=function() {
 }
 
 class jsxl {
-	constructor(x,y) {
+	constructor(y,x) {
 		this.table=document.getElementById("table")
 	
 		this.ROWS=y
@@ -49,15 +49,29 @@ class jsxl {
 			}
 			this.table.appendChild(temptr)
 		}
-
-		/* old code for creating table, will delete later
-		document.getElementById("table")
-		tr=document.createElement("tr")
-		for (i of rows) {
-			th=document.createElement("th")
-			th.innerHTML=(i==0?"X":i-1)
-			tr.appendChild(th)
-		}
-		*/
+	}
+	newarr(y,x) {
+		var arr=Array(y).fill(0)
+		for (var i in arr) { arr[i]=Array(x).fill("") }
+		return arr
+	}
+	safety(cord) { //prevents out of bound
+		return [
+			cord[0]<0?0:
+			cord[0]>=this.ROWS-1?this.ROWS-1:cord[0],
+			cord[1]<0?0:
+			cord[1]>=this.COLS-1?this.COLS-1:cord[1]
+		]
+	}
+	unpack(cord1, cord2) {
+		console.log(cord1,cord2)
+		var range=[...this.safety(cord1), ...this.safety(cord2)]
+		var ret=this.newarr(Math.abs(range[0]-range[2])+1,Math.abs(range[1]-range[3])+1)
+		console.log(ret)
+		for (var y in ret)
+			for (var x in y)
+				ret[y][x]=this.$[y][x]
+				
+		return ret
 	}
 }

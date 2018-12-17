@@ -4,9 +4,13 @@
 	text-decoration: none;
 	border: 0;
 }
-.title {
+.title, .title-inv {
 	margin: 5px 0px 5px 5px;
 	font-size: 25px;
+}
+.title-inv {
+	color: white;
+	background: black;
 }
 #txt {
 	height: 25%;
@@ -19,6 +23,7 @@ table {
 }
 input {
 	width: 3em;
+	font-family: monospace, monospace;
 }
 th {
 	font-weight: normal;
