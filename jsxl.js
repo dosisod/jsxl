@@ -1,6 +1,5 @@
 window.onload=function() {
-	//xl=new jsxl(16,16)
-	xl=new jsxl(2,2)
+	xl=new jsxl(16,16)
 	xl.init()
 }
 
