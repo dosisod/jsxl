@@ -1,5 +1,6 @@
 window.onload=function() {
-	xl=new jsxl(16,16)
+	//xl=new jsxl(16,16)
+	xl=new jsxl(2,2)
 	xl.init()
 }
 
@@ -13,6 +14,38 @@ class jsxl {
 		this.data=this.newarr(this.ROWS,this.COLS)
 	}
 	init() {
+		this.redraw()
+	}
+	update(html) {
+		var cell=html.target.id.substr(5).split(":")
+		this.data[cell[0]][cell[1]]=html.target.value
+	}
+	resize(y, x) { //changes the size of the internal data table
+		if (x>this.COLS) //append empty data to table if larger
+			for (var i=0;i<this.ROWS;i++)
+				this.data[i].push(...Array(x-this.COLS).fill(""))
+				
+		else if (x<this.COLS) //remove data if table smaller
+			for (var i=0;i<this.ROWS;i++)
+				this.data[i]=this.data[i].splice(0,x)
+
+		this.COLS=x //rows need updated value of columns
+		
+		if (y>this.ROWS) //add more rows if larger
+			for (var i=0;i<y-this.ROWS;i++)
+				this.data[this.ROWS+i]=Array(this.COLS).fill("")
+
+		else if (y<this.ROWS) //delete rows if smaller
+			for (var i=0;i<this.ROWS-y;i++)
+				this.data.pop()
+		
+		this.ROWS=y
+
+		this.redraw()
+	}
+	redraw() { //redraws the table but keeps data
+		table.innerHTML="" //clears current table
+
 		//does top header
 		var temptr=document.createElement("tr")
 		for (var i=0;i<=this.COLS;i++) {
@@ -43,16 +76,13 @@ class jsxl {
 					var input=document.createElement("input")
 					input.id="JSXL_"+i+":"+(j-1)
 					input.onchange=(e)=>{this.update(e)} //updates internal table when cell changes
+					input.value=this.data[i][j-1]
 					temptd.appendChild(input)
 				}
 				temptr.appendChild(temptd)
 			}
 			this.table.appendChild(temptr)
 		}
-	}
-	update(html) {
-		var cell=html.target.id.substr(5).split(":")
-		this.data[cell[0]][cell[1]]=html.target.value
 	}
 	newarr(y,x) {
 		var arr=new Array(y).fill(0)
@@ -86,9 +116,3 @@ class jsxl {
 		return total
 	}
 }
-
-
-
-
-
-
