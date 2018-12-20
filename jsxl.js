@@ -19,7 +19,10 @@ class jsxl {
 		var cell=html.target.id.substr(5).split(":")
 		this.data[cell[0]][cell[1]]=html.target.value
 	}
-	resize(y, x) { //changes the size of the internal data table
+	resize(y, x) { //change size of data table (relatively)
+		this.newsize(this.ROWS+y, this.COLS+x)
+	}
+	newsize(y, x) { //changes the size of the internal data table (absolute)
 		if (x>this.COLS) //append empty data to table if larger
 			for (var i=0;i<this.ROWS;i++)
 				this.data[i].push(...Array(x-this.COLS).fill(""))
@@ -47,11 +50,22 @@ class jsxl {
 
 		//does top header
 		var temptr=document.createElement("tr")
-		for (var i=0;i<=this.COLS;i++) {
+		for (var i=0;i<=this.COLS+1;i++) {
 			var tempth=document.createElement("th")
 			if (i==0) { //if its 0, print an 'x'
 				tempth.innerHTML="x"
 				tempth.id="JSXL_:"
+			}
+			else if (i==this.COLS+1) { //prints the "- +" to change table size
+				var tempspan=document.createElement("span")
+				tempspan.innerHTML="- "
+				tempspan.onclick=()=>this.resize(0,-1)
+				tempth.appendChild(tempspan)
+				
+				var tempspan=document.createElement("span")
+				tempspan.innerHTML="+"
+				tempspan.onclick=()=>this.resize(0,1)
+				tempth.appendChild(tempspan)
 			}
 			else { //else print the index
 				tempth.innerHTML=(i-1)
@@ -62,20 +76,32 @@ class jsxl {
 		this.table.appendChild(temptr)
 
 		//makes all the rows
-		for (var i=0;i<this.ROWS;i++) { //for every row
+		for (var y=0;y<=this.ROWS;y++) { //for every row
 			var temptr=document.createElement("tr") //make a new tr
-			for (var j=0;j<=this.COLS;j++) { //fill each col with input box
-				if (j==0) {
+			for (var x=0;x<=this.COLS;x++) { //fill each col with input box
+				if (x==0 && y!=this.ROWS) { //only prints row header
 					var temptd=document.createElement("th")
-					temptd.innerHTML=i
-					temptd.id="JSXL_"+i+":"
+					temptd.innerHTML=y
+					temptd.id="JSXL_"+y+":"
 				}
-				else {
+				else if (x==0 && y==this.ROWS) { //only prints table adder/remover
+					var temptd=document.createElement("th")
+					var tempspan=document.createElement("span")
+					tempspan.innerHTML="-<br>"
+					tempspan.onclick=()=>this.resize(-1,0)
+					temptd.appendChild(tempspan)
+					
+					tempspan=document.createElement("span")
+					tempspan.innerHTML="+"
+					tempspan.onclick=()=>this.resize(1,0)
+					temptd.appendChild(tempspan)
+				}
+				else if (y!=this.ROWS) { //else just print the inner input boxes
 					var temptd=document.createElement("td")
 					var input=document.createElement("input")
-					input.id="JSXL_"+i+":"+(j-1)
+					input.id="JSXL_"+y+":"+(x-1)
 					input.onchange=(e)=>{this.update(e)} //updates internal table when cell changes
-					input.value=this.data[i][j-1]
+					input.value=this.data[y][x-1]
 					temptd.appendChild(input)
 				}
 				temptr.appendChild(temptd)
@@ -83,7 +109,7 @@ class jsxl {
 			this.table.appendChild(temptr)
 		}
 	}
-	newarr(y,x) {
+	newarr(y,x) { //makes a new empty array
 		var arr=new Array(y).fill(0)
 		for (var i in arr) { arr[i]=new Array(x).fill("") }
 		return arr
@@ -96,7 +122,7 @@ class jsxl {
 			cord[1]>=this.COLS-1?this.COLS-1:cord[1]
 		]
 	}
-	unpack(cord1, cord2) {
+	unpack(cord1, cord2) { //makes 2d array of values given range
 		var range=[...this.safety(cord1), ...this.safety(cord2)]
 		var ret=this.newarr(Math.abs(range[0]-range[2])+1,Math.abs(range[1]-range[3])+1)
 		for (var y in ret)
