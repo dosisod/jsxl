@@ -19,6 +19,11 @@ class jsxl {
 		var cell=html.target.id.substr(5).split(":")
 		this.data[cell[0]][cell[1]]=html.target.value
 	}
+	run() {
+		this.func=new Function(document.getElementById("txt").value)
+		this.func()
+		this.func=undefined
+	}
 	resize(y, x) { //change size of data table (relatively)
 		this.newsize(this.ROWS+y, this.COLS+x)
 	}
@@ -131,8 +136,8 @@ class jsxl {
 				
 		return ret
 	}
-	SUM(cord1, cord2) {
-		var arr=this.unpack(cord1, cord2)
+	SUM(startcord, endcord) {
+		var arr=this.unpack(startcord, endcord)
 		var total=0
 		for (var y in arr)
 			for (var x in arr[y])
@@ -141,3 +146,10 @@ class jsxl {
 		return total
 	}
 }
+
+
+
+
+
+
+
