@@ -11,6 +11,23 @@ class jsxl {
 		this.COLS=x
 
 		this.data=this.newarr(this.ROWS,this.COLS)
+
+		this.control=this.shift=this.space=false
+
+		this.keydown=(e)=>{
+			if (e.keyCode==17) this.control=true
+			if (e.keyCode==16) this.shift=true
+			if (e.keyCode==32) this.space=true
+			this.runner() //checks if all the above keys are pressed
+		}
+		document.body.addEventListener("keydown", this.keydown)
+		
+		this.keyup=(e)=>{
+			if (e.keyCode==17) this.control=false
+			if (e.keyCode==16) this.shift=false
+			if (e.keyCode==32) this.space=false
+		}
+		document.body.addEventListener("keyup", this.keyup)
 	}
 	init() {
 		this.redraw()
@@ -23,6 +40,9 @@ class jsxl {
 		this.func=new Function(document.getElementById("txt").value)
 		this.func()
 		this.func=undefined
+	}
+	runner() { //captures ctr+shift+x
+		if (this.control&&this.shift&&this.space) this.run()
 	}
 	resize(y, x) { //change size of data table (relatively)
 		this.newsize(this.ROWS+y, this.COLS+x)
