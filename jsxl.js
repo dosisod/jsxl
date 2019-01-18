@@ -37,9 +37,8 @@ class jsxl {
 		this.data[cell[0]][cell[1]]=html.target.value
 	}
 	run() {
-		this.func=new Function(document.getElementById("txt").value)
-		this.func()
-		this.func=undefined
+		Function(document.getElementById("txt").value)() //converts to function and runs it
+		this.control=this.shift=this.space=false
 	}
 	runner() { //captures ctr+shift+x
 		if (this.control&&this.shift&&this.space) this.run()
