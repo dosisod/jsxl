@@ -133,7 +133,7 @@ class jsxl {
 			this.table.appendChild(temptr)
 		}
 	}
-	newarr(y,x) { //makes a new empty array
+	newarr(y, x) { //makes a new empty array
 		var arr=new Array(y).fill(0)
 		for (var i in arr) { arr[i]=new Array(x).fill("") }
 		return arr
