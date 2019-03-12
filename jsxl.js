@@ -10,29 +10,28 @@ class jsxl {
 		this.ROWS=y
 		this.COLS=x
 
+		//fills table in with empty data
 		this.data=this.newarr(this.ROWS,this.COLS)
 
 		this.control=this.shift=this.space=false
 
-		this.keydown=e=>{
+		document.body.onkeydown=e=>{
 			if (e.keyCode==17) this.control=true
 			if (e.keyCode==16) this.shift=true
 			if (e.keyCode==32) this.space=true
 			this.runner() //checks if all the above keys are pressed
 		}
-		document.body.addEventListener("keydown", this.keydown)
 		
-		this.keyup=e=>{
+		document.body.onkeyup=e=>{ //unset keys if they are not being held
 			if (e.keyCode==17) this.control=false
 			if (e.keyCode==16) this.shift=false
 			if (e.keyCode==32) this.space=false
 		}
-		document.body.addEventListener("keyup", this.keyup)
 	}
 	init() {
 		this.redraw()
 	}
-	update(html) {
+	update(html) { //takes an id of whats being updated and changes it in the table
 		var cell=html.target.id.substr(5).split(":")
 		this.data[cell[0]][cell[1]]=html.target.value
 	}
@@ -124,7 +123,7 @@ class jsxl {
 					var temptd=document.createElement("td")
 					var input=document.createElement("input")
 					input.id="JSXL_"+y+":"+(x-1)
-					input.onchange=(e)=>{this.update(e)} //updates internal table when cell changes
+					input.onchange=e=>this.update(e) //updates internal table when cell changes
 					input.value=this.data[y][x-1]
 					temptd.appendChild(input)
 				}
