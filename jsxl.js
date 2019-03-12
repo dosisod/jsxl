@@ -4,7 +4,7 @@ window.onload=function() {
 }
 
 class jsxl {
-	constructor(y,x) {
+	constructor(y, x) {
 		this.table=document.getElementById("table")
 	
 		this.ROWS=y
@@ -14,7 +14,7 @@ class jsxl {
 
 		this.control=this.shift=this.space=false
 
-		this.keydown=(e)=>{
+		this.keydown=e=>{
 			if (e.keyCode==17) this.control=true
 			if (e.keyCode==16) this.shift=true
 			if (e.keyCode==32) this.space=true
@@ -22,7 +22,7 @@ class jsxl {
 		}
 		document.body.addEventListener("keydown", this.keydown)
 		
-		this.keyup=(e)=>{
+		this.keyup=e=>{
 			if (e.keyCode==17) this.control=false
 			if (e.keyCode==16) this.shift=false
 			if (e.keyCode==32) this.space=false
@@ -135,7 +135,7 @@ class jsxl {
 	}
 	newarr(y, x) { //makes a new empty array
 		var arr=new Array(y).fill(0)
-		for (var i in arr) { arr[i]=new Array(x).fill("") }
+		for (var i in arr) arr[i]=new Array(x).fill("")
 		return arr
 	}
 	safety(cord) { //prevents out of bound
