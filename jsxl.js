@@ -6,6 +6,20 @@ window.onload=function() {
 class jsxl {
 	constructor(y, x) {
 		this.table=document.getElementById("table")
+		this.txt=document.getElementById("txt")
+
+		this.txt.onkeydown=e=>{
+			if(e.keyCode==9){ //if tab is pressed
+				var x=txt.value
+				var s=e.target.selectionStart
+				var d=e.target.selectionEnd
+				    
+				this.txt.value=x.substring(0, s)+"\t"+x.substring(s) //add a tab character
+					
+				e.target.setSelectionRange(s+1, d+1) //move cursor back
+				e.preventDefault() //stop from tabbing down
+			}
+		}
 	
 		this.ROWS=y
 		this.COLS=x
@@ -36,8 +50,12 @@ class jsxl {
 		this.data[cell[0]][cell[1]]=html.target.value
 	}
 	run() {
-		Function(document.getElementById("txt").value)() //converts to function and runs it
-		this.control=this.shift=this.space=false
+		this.control=this.shift=this.space=false //resets keys
+		this.f=new Function(document.getElementById("txt").value) //converts to function
+		this.f() //have to use "this" to allow for grabbing from class
+		delete(this.f)
+		
+		this.redraw()
 	}
 	runner() { //captures ctr+shift+x
 		if (this.control&&this.shift&&this.space) this.run()
