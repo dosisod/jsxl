@@ -26,6 +26,7 @@ class jsxl {
 
 		//fills table in with empty data
 		this.data=this.newarr(this.ROWS,this.COLS)
+		this.$=new Proxy(this.data, {}) //allows for using this.$ over this.data
 
 		this.control=this.shift=this.space=false
 
@@ -51,11 +52,15 @@ class jsxl {
 	}
 	run() {
 		this.control=this.shift=this.space=false //resets keys
-		this.f=new Function(document.getElementById("txt").value) //converts to function
+
+		this.f=new Function( //converts to function
+			"var $=this;"+ //allows for $.stuff instead of this.stuff
+			document.getElementById("txt").value //whatever is in textarea
+		)
 		this.f() //have to use "this" to allow for grabbing from class
 		delete(this.f)
 		
-		this.redraw()
+		this.redraw() //updates table
 	}
 	runner() { //captures ctr+shift+x
 		if (this.control&&this.shift&&this.space) this.run()
