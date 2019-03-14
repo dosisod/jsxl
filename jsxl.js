@@ -9,7 +9,7 @@ class jsxl {
 		this.txt=document.getElementById("txt")
 
 		this.txt.onkeydown=e=>{
-			if(e.keyCode==9){ //if tab is pressed
+			if (e.keyCode==9){ //if tab is pressed
 				var x=txt.value
 				var s=e.target.selectionStart
 				var d=e.target.selectionEnd
@@ -18,6 +18,19 @@ class jsxl {
 					
 				e.target.setSelectionRange(s+1, d+1) //move cursor back
 				e.preventDefault() //stop from tabbing down
+			}
+			if (e.keyCode==13) { //on enter, and newline but keep same indent
+				var x=txt.value
+				var s=e.target.selectionStart
+				var d=e.target.selectionEnd
+
+				//get whitespace from current line
+				var str=x.substring(0, s).split("\n").pop().match(/^[\t ]*/g)[0]
+
+				this.txt.value=x.substring(0, s)+"\n"+str+x.substring(s) //add newline with padding
+				
+				e.target.setSelectionRange(s+str.length+1, d+str.length+1) //move cursor back
+				e.preventDefault() //stop from adding enter
 			}
 		}
 	
