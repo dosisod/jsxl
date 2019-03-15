@@ -8,42 +8,7 @@ class jsxl {
 		this.table=document.getElementById("table")
 		this.txt=document.getElementById("txt")
 
-		this.txt.onkeydown=e=>{
-			var c=this.cursor(e.target) //make cursor object
-			var x=txt.value
-			var k=e.key
-			
-			if (k=="Tab"){ //if tab is pressed
-				this.txt.value=x.substring(0, c.start)+"\t"+x.substring(c.start) //add a tab character
-					
-				e.target.setSelectionRange(c.start+1, c.end+1) //move cursor back
-				e.preventDefault() //stop from tabbing down
-			}
-			else if (k=="Enter") { //on enter, and newline but keep same indent
-				//get whitespace from current line
-				var str=x.substring(0, c.start).split("\n").pop().match(/^[\t ]*/g)[0]
-
-				this.txt.value=x.substring(0, c.start)+"\n"+str+x.substring(c.start) //add newline with padding
-				
-				e.target.setSelectionRange(c.start+str.length+1, c.end+str.length+1) //move cursor back
-				e.preventDefault() //stop from adding enter
-			}
-			else if ((k=="("||k=="["||k=="{"||k=="'"||k=="\"")&&(k!=x[c.start])) {
-				//creates pair for bracket
-				str=(k=="("?"()":k=="["?"[]":k=="{"?"{}":k=="'"?"''":k=="\""?"\"\"":"")
-				
-				this.txt.value=x.substring(0, c.start)+str+x.substring(c.start) //insert pair
-				
-				e.target.setSelectionRange(c.start+1, c.end+1) //move cursor back
-				e.preventDefault()
-			}
-			else if (k=="]"||k=="}"||k==")"||k=="'"||k=="\"") { //auto exit brackets with ) } ' "
-				if (x[c.start]==k) {
-					e.target.setSelectionRange(c.start+2, c.end+2) //move cursor back
-					e.preventDefault()
-				}
-			}
-		}
+		this.txt.onkeydown=e=>this.txtdown(e) //allows for fancy auto-indent etc
 	
 		this.ROWS=y
 		this.COLS=x
@@ -52,6 +17,7 @@ class jsxl {
 		this.data=this.newarr(this.ROWS,this.COLS)
 		this.$=new Proxy(this.data, {}) //allows for using this.$ over this.data
 
+		//used for keeping track of key states for CTR+SHIFT+SPACE keybind (run)
 		this.control=this.shift=this.space=false
 
 		document.body.onkeydown=e=>{
@@ -76,6 +42,47 @@ class jsxl {
 	}
 	cursor(target) { //returns position of cursor in textarea
 		return { start:target.selectionStart, end:target.selectionEnd }
+	}
+	txtdown(e) { //handles the txt.onkeydown event
+		var cursor=this.cursor(e.target) //make cursor object
+		var text=this.txt.value
+		var key=e.key
+		
+		if (key=="Tab"){ //if tab is pressed
+			this.txt.value=text.substring(0, cursor.start)+"\t"+text.substring(cursor.start) //add a tab character
+				
+			e.target.setSelectionRange(cursor.start+1, cursor.end+1) //move cursor back
+			e.preventDefault() //stop from tabbing down
+		}
+		else if (key=="Enter") { //on enter, and newline but keep same indent
+			//get whitespace from current line
+			var str=text.substring(0, cursor.start).split("\n").pop().match(/^[\t ]*/g)[0]
+
+			this.txt.value=text.substring(0, cursor.start)+"\n"+str+text.substring(cursor.start) //add newline with padding
+			
+			e.target.setSelectionRange(cursor.start+str.length+1, cursor.end+str.length+1) //move cursor back
+			e.preventDefault() //stop from adding enter
+		}
+		else if ((key=="("||key=="["||key=="{"||key=="'"||key=="\"")&&(key!=text[cursor.start])) {
+			str=( //sets corresponding pair for bracket
+				key=="("?"()":
+				key=="["?"[]":
+				key=="{"?"{}":
+				key=="'"?"''":
+				key=="\""?"\"\"":""
+			)
+			
+			this.txt.value=text.substring(0, cursor.start)+str+text.substring(cursor.start) //insert pair
+			
+			e.target.setSelectionRange(cursor.start+1, cursor.end+1) //move cursor back
+			e.preventDefault()
+		}
+		else if (key=="]"||key=="}"||key==")"||key=="'"||key=="\"") { //auto exit brackets with ) } ' "
+			if (text[cursor.start]==key) {
+				e.target.setSelectionRange(cursor.start+1, cursor.end+1) //move cursor back
+				e.preventDefault()
+			}
+		}
 	}
 	run() {
 		this.control=this.shift=this.space=false //resets keys
