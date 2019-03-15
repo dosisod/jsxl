@@ -9,28 +9,54 @@ class jsxl {
 		this.txt=document.getElementById("txt")
 
 		this.txt.onkeydown=e=>{
+			var c=this.cursor(e.target) //make cursor object
+			var x=txt.value
+			
 			if (e.keyCode==9){ //if tab is pressed
-				var x=txt.value
-				var s=e.target.selectionStart
-				var d=e.target.selectionEnd
-				    
-				this.txt.value=x.substring(0, s)+"\t"+x.substring(s) //add a tab character
+				this.txt.value=x.substring(0, c.start)+"\t"+x.substring(c.start) //add a tab character
 					
-				e.target.setSelectionRange(s+1, d+1) //move cursor back
+				e.target.setSelectionRange(c.start+1, c.end+1) //move cursor back
 				e.preventDefault() //stop from tabbing down
 			}
-			if (e.keyCode==13) { //on enter, and newline but keep same indent
-				var x=txt.value
-				var s=e.target.selectionStart
-				var d=e.target.selectionEnd
-
+			else if (e.keyCode==13) { //on enter, and newline but keep same indent
 				//get whitespace from current line
-				var str=x.substring(0, s).split("\n").pop().match(/^[\t ]*/g)[0]
+				var str=x.substring(0, c.start).split("\n").pop().match(/^[\t ]*/g)[0]
 
-				this.txt.value=x.substring(0, s)+"\n"+str+x.substring(s) //add newline with padding
+				this.txt.value=x.substring(0, c.start)+"\n"+str+x.substring(c.start) //add newline with padding
 				
-				e.target.setSelectionRange(s+str.length+1, d+str.length+1) //move cursor back
+				e.target.setSelectionRange(c.start+str.length+1, c.end+str.length+1) //move cursor back
 				e.preventDefault() //stop from adding enter
+			}
+			else if (
+				(e.keyCode==219||e.keyCode==57||e.keyCode==222)&&
+					!((x[c.start-1]=="'"&&!this.shift)||
+					(x[c.start-1]=="\""&&this.shift)
+				)) { //auto bracket for {} "" '' () if shift is held
+				
+				var str=[ //creates key mapping
+					{219:"[]", 222:"''"}, //not shift
+					{57:"()", 219:"{}", 222:"\"\""} //shift
+				][Number(this.shift)][e.keyCode] //make sure character is "bracketable"
+				
+				if (str) {
+					this.txt.value=x.substring(0, c.start)+str+x.substring(c.start)
+					
+					e.target.setSelectionRange(c.start+1, c.end+1) //move cursor back
+					e.preventDefault()
+				}
+			}
+			else if (e.keyCode==221||e.keyCode==48||e.keyCode==222) { //auto exit brackets with ) } ' "
+				var str=[
+					{221:"]", 222:"'"}, //not shift
+					{48:")", 221:"}", 222:"\""} //shift
+				][Number(this.shift)][e.keyCode] //make sure character is "bracketable"
+				console.log(str)
+				
+				//if (x[c.start]=="}"||x[c.start]==")"||x[c.start]=="'"||x[c.start]=="\"") {
+				if (x[c.start]==str) {
+					e.target.setSelectionRange(c.start+2, c.end+2) //move cursor back
+					e.preventDefault()
+				}
 			}
 		}
 	
@@ -62,6 +88,9 @@ class jsxl {
 	update(html) { //takes an id of whats being updated and changes it in the table
 		var cell=html.target.id.substr(5).split(":")
 		this.data[cell[0]][cell[1]]=html.target.value
+	}
+	cursor(target) { //returns position of cursor in textarea
+		return { start:target.selectionStart, end:target.selectionEnd }
 	}
 	run() {
 		this.control=this.shift=this.space=false //resets keys
