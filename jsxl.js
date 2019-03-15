@@ -11,14 +11,15 @@ class jsxl {
 		this.txt.onkeydown=e=>{
 			var c=this.cursor(e.target) //make cursor object
 			var x=txt.value
+			var k=e.key
 			
-			if (e.keyCode==9){ //if tab is pressed
+			if (k=="Tab"){ //if tab is pressed
 				this.txt.value=x.substring(0, c.start)+"\t"+x.substring(c.start) //add a tab character
 					
 				e.target.setSelectionRange(c.start+1, c.end+1) //move cursor back
 				e.preventDefault() //stop from tabbing down
 			}
-			else if (e.keyCode==13) { //on enter, and newline but keep same indent
+			else if (k=="Enter") { //on enter, and newline but keep same indent
 				//get whitespace from current line
 				var str=x.substring(0, c.start).split("\n").pop().match(/^[\t ]*/g)[0]
 
@@ -27,33 +28,17 @@ class jsxl {
 				e.target.setSelectionRange(c.start+str.length+1, c.end+str.length+1) //move cursor back
 				e.preventDefault() //stop from adding enter
 			}
-			else if (
-				(e.keyCode==219||e.keyCode==57||e.keyCode==222)&&
-					!((x[c.start-1]=="'"&&!this.shift)||
-					(x[c.start-1]=="\""&&this.shift)
-				)) { //auto bracket for {} "" '' () if shift is held
+			else if ((k=="("||k=="["||k=="{"||k=="'"||k=="\"")&&(k!=x[c.start])) {
+				//creates pair for bracket
+				str=(k=="("?"()":k=="["?"[]":k=="{"?"{}":k=="'"?"''":k=="\""?"\"\"":"")
 				
-				var str=[ //creates key mapping
-					{219:"[]", 222:"''"}, //not shift
-					{57:"()", 219:"{}", 222:"\"\""} //shift
-				][Number(this.shift)][e.keyCode] //make sure character is "bracketable"
+				this.txt.value=x.substring(0, c.start)+str+x.substring(c.start) //insert pair
 				
-				if (str) {
-					this.txt.value=x.substring(0, c.start)+str+x.substring(c.start)
-					
-					e.target.setSelectionRange(c.start+1, c.end+1) //move cursor back
-					e.preventDefault()
-				}
+				e.target.setSelectionRange(c.start+1, c.end+1) //move cursor back
+				e.preventDefault()
 			}
-			else if (e.keyCode==221||e.keyCode==48||e.keyCode==222) { //auto exit brackets with ) } ' "
-				var str=[
-					{221:"]", 222:"'"}, //not shift
-					{48:")", 221:"}", 222:"\""} //shift
-				][Number(this.shift)][e.keyCode] //make sure character is "bracketable"
-				console.log(str)
-				
-				//if (x[c.start]=="}"||x[c.start]==")"||x[c.start]=="'"||x[c.start]=="\"") {
-				if (x[c.start]==str) {
+			else if (k=="]"||k=="}"||k==")"||k=="'"||k=="\"") { //auto exit brackets with ) } ' "
+				if (x[c.start]==k) {
 					e.target.setSelectionRange(c.start+2, c.end+2) //move cursor back
 					e.preventDefault()
 				}
