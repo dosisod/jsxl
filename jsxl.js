@@ -14,7 +14,7 @@ class jsxl {
 		this.COLS=x
 
 		//fills table in with empty data
-		this.data=this.newarr(this.ROWS,this.COLS)
+		this.data=this.newarr(this.ROWS, this.COLS)
 		this.$=new Proxy(this.data, {}) //allows for using this.$ over this.data
 
 		//used for keeping track of key states for CTR+SHIFT+SPACE keybind (run)
@@ -139,12 +139,12 @@ class jsxl {
 			else if (i==this.COLS+1) { //prints the "- +" to change table size
 				var tempspan=document.createElement("span")
 				tempspan.innerHTML="- "
-				tempspan.onclick=()=>this.resize(0,-1)
+				tempspan.onclick=()=>this.resize(0, -1)
 				tempth.appendChild(tempspan)
 				
 				var tempspan=document.createElement("span")
 				tempspan.innerHTML="+"
-				tempspan.onclick=()=>this.resize(0,1)
+				tempspan.onclick=()=>this.resize(0, 1)
 				tempth.appendChild(tempspan)
 			}
 			else { //else print the index
