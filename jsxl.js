@@ -41,7 +41,7 @@ class jsxl {
 		this.data[cell[0]][cell[1]]=html.target.value
 	}
 	cursor(target) { //returns position of cursor in textarea
-		return { start:target.selectionStart, end:target.selectionEnd }
+		return target.selectionStart
 	}
 	txtdown(e) { //handles the txt.onkeydown event
 		var cursor=this.cursor(e.target) //make cursor object
@@ -49,21 +49,21 @@ class jsxl {
 		var key=e.key
 		
 		if (key=="Tab"){ //if tab is pressed
-			this.txt.value=text.substring(0, cursor.start)+"\t"+text.substring(cursor.start) //add a tab character
-				
-			e.target.setSelectionRange(cursor.start+1, cursor.end+1) //move cursor back
+			this.txt.value=text.substring(0, cursor)+"\t"+text.substring(cursor) //add a tab character
+			
+			e.target.setSelectionRange(cursor+1, cursor+1) //move cursor back
 			e.preventDefault() //stop from tabbing down
 		}
 		else if (key=="Enter") { //on enter, and newline but keep same indent
 			//get whitespace from current line
-			var str=text.substring(0, cursor.start).split("\n").pop().match(/^[\t ]*/g)[0]
+			var str=text.substring(0, cursor).split("\n").pop().match(/^[\t ]*/g)[0]
 
-			this.txt.value=text.substring(0, cursor.start)+"\n"+str+text.substring(cursor.start) //add newline with padding
+			this.txt.value=text.substring(0, cursor)+"\n"+str+text.substring(cursor) //add newline with padding
 			
-			e.target.setSelectionRange(cursor.start+str.length+1, cursor.end+str.length+1) //move cursor back
+			e.target.setSelectionRange(cursor+str.length+1, cursor+str.length+1) //move cursor back
 			e.preventDefault() //stop from adding enter
 		}
-		else if ((key=="("||key=="["||key=="{"||key=="'"||key=="\"")&&(key!=text[cursor.start])) {
+		else if ((key=="("||key=="["||key=="{"||key=="'"||key=="\"")&&(key!=text[cursor])) {
 			str=( //sets corresponding pair for bracket
 				key=="("?"()":
 				key=="["?"[]":
@@ -72,14 +72,14 @@ class jsxl {
 				key=="\""?"\"\"":""
 			)
 			
-			this.txt.value=text.substring(0, cursor.start)+str+text.substring(cursor.start) //insert pair
+			this.txt.value=text.substring(0, cursor)+str+text.substring(cursor) //insert pair
 			
-			e.target.setSelectionRange(cursor.start+1, cursor.end+1) //move cursor back
+			e.target.setSelectionRange(cursor+1, cursor+1) //move cursor back
 			e.preventDefault()
 		}
 		else if (key=="]"||key=="}"||key==")"||key=="'"||key=="\"") { //auto exit brackets with ) } ' "
-			if (text[cursor.start]==key) {
-				e.target.setSelectionRange(cursor.start+1, cursor.end+1) //move cursor back
+			if (text[cursor]==key) {
+				e.target.setSelectionRange(cursor+1, cursor+1) //move cursor back
 				e.preventDefault()
 			}
 		}
