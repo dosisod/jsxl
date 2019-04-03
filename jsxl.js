@@ -21,16 +21,18 @@ class jsxl {
 		this.control=this.shift=this.space=false
 
 		document.body.onkeydown=e=>{
-			if (e.keyCode==17) this.control=true
-			if (e.keyCode==16) this.shift=true
-			if (e.keyCode==32) this.space=true
+			var k=e.key
+			if (k=="Control") this.control=true
+			if (k=="Shift") this.shift=true
+			if (k==" ") this.space=true
 			this.runner() //checks if all the above keys are pressed
 		}
 		
 		document.body.onkeyup=e=>{ //unset keys if they are not being held
-			if (e.keyCode==17) this.control=false
-			if (e.keyCode==16) this.shift=false
-			if (e.keyCode==32) this.space=false
+			var k=e.key
+			if (k=="Control") this.control=false
+			if (k=="Shift") this.shift=false
+			if (k==" ") this.space=false
 		}
 	}
 	init() {
