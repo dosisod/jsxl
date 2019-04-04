@@ -131,7 +131,8 @@ class jsxl {
 		table.innerHTML="" //clears current table
 
 		//does top header
-		var temptr=document.createElement("tr")
+		//var temptr=document.createElement("tr")
+		var temptr=nu("tr", {})
 		for (var i=0;i<=this.COLS+1;i++) {
 			var tempth=document.createElement("th")
 			if (i==0) { //if its 0, print an 'x'
@@ -139,15 +140,15 @@ class jsxl {
 				tempth.id="JSXL_:"
 			}
 			else if (i==this.COLS+1) { //prints the "- +" to change table size
-				var tempspan=document.createElement("span")
-				tempspan.innerHTML="- "
-				tempspan.onclick=()=>this.resize(0, -1)
-				tempth.appendChild(tempspan)
-				
-				var tempspan=document.createElement("span")
-				tempspan.innerHTML="+"
-				tempspan.onclick=()=>this.resize(0, 1)
-				tempth.appendChild(tempspan)
+				nu("span", {
+					"innerHTML": "- ",
+					"onclick": ()=>this.resize(0, -1)
+				}, tempth)
+
+				nu("span", {
+					"innerHTML": "+",
+					"onclick": ()=>this.resize(0, 1)
+				}, tempth)
 			}
 			else { //else print the index
 				tempth.innerHTML=(i-1)
@@ -162,29 +163,31 @@ class jsxl {
 			var temptr=document.createElement("tr") //make a new tr
 			for (var x=0;x<=this.COLS;x++) { //fill each col with input box
 				if (x==0 && y!=this.ROWS) { //only prints row header
-					var temptd=document.createElement("th")
-					temptd.innerHTML=y
-					temptd.id="JSXL_"+y+":"
+					var temptd=nu("th", {
+						"innerHTML": y,
+						"id": "JSXL_"+y+":"
+					})
 				}
 				else if (x==0 && y==this.ROWS) { //only prints table adder/remover
-					var temptd=document.createElement("th")
-					var tempspan=document.createElement("span")
-					tempspan.innerHTML="-<br>"
-					tempspan.onclick=()=>this.resize(-1,0)
-					temptd.appendChild(tempspan)
-					
-					tempspan=document.createElement("span")
-					tempspan.innerHTML="+"
-					tempspan.onclick=()=>this.resize(1,0)
-					temptd.appendChild(tempspan)
+					var temptd=nu("th", {})
+					nu("span", {
+						"innerHTML": "-<br>",
+						"onclick": ()=>this.resize(-1, 0)
+					}, temptd)
+
+					nu("span", {
+						"innerHTML": "+",
+						"onclick": ()=>this.resize(1, 0)
+					}, temptd)
 				}
 				else if (y!=this.ROWS) { //else just print the inner input boxes
-					var temptd=document.createElement("td")
-					var input=document.createElement("input")
-					input.id="JSXL_"+y+":"+(x-1)
-					input.onchange=e=>this.update(e) //updates internal table when cell changes
-					input.value=this.data[y][x-1]
-					temptd.appendChild(input)
+					var temptd=nu("td", {})
+
+					nu("input", {
+						"id": "JSXL_"+y+":"+(x-1),
+						"onchange": e=>this.update(e),
+						"value": this.data[y][x-1]
+					}, temptd)
 				}
 				temptr.appendChild(temptd)
 			}
