@@ -35,20 +35,16 @@ class jsxl {
 			if (k==" ") this.space=false
 		}
 	}
-
 	init() {
 		this.redraw()
 	}
-
 	update(html) { //takes an id of whats being updated and changes it in the table
 		var cell=html.target.id.substr(5).split(":")
 		this.data[cell[0]][cell[1]]=html.target.value
 	}
-
 	cursor(target) { //returns position of cursor in textarea
 		return target.selectionStart
 	}
-
 	txtdown(e) { //handles the txt.onkeydown event
 		var cursor=this.cursor(e.target) //make cursor object
 		var text=this.txt.value
@@ -90,7 +86,6 @@ class jsxl {
 			}
 		}
 	}
-
 	run() {
 		this.control=this.shift=this.space=false //resets keys
 
@@ -103,15 +98,12 @@ class jsxl {
 		
 		this.redraw() //updates table
 	}
-
 	runner() { //captures ctr+shift+x
 		if (this.control&&this.shift&&this.space) this.run()
 	}
-
 	resize(y, x) { //change size of data table (relatively)
 		this.newsize(this.ROWS+y, this.COLS+x)
 	}
-
 	newsize(y, x) { //changes the size of the internal data table (absolute)
 		if (x>this.COLS) //append empty data to table if larger
 			for (var i=0;i<this.ROWS;i++)
@@ -135,7 +127,6 @@ class jsxl {
 
 		this.redraw()
 	}
-
 	redraw() { //redraws the table but keeps data
 		table.innerHTML="" //clears current table
 
@@ -200,13 +191,11 @@ class jsxl {
 			this.table.appendChild(temptr)
 		}
 	}
-
 	newarr(y, x) { //makes a new empty array
 		var arr=new Array(y).fill(0)
 		for (var i in arr) arr[i]=new Array(x).fill("")
 		return arr
 	}
-
 	safety(cord) { //prevents out of bound
 		return [
 			cord[0]<0?0:
@@ -215,7 +204,6 @@ class jsxl {
 			cord[1]>=this.COLS-1?this.COLS-1:cord[1]
 		]
 	}
-
 	unpack(cord1, cord2) { //makes 2d array of values given range
 		var range=[...this.safety(cord1), ...this.safety(cord2)]
 		var ret=this.newarr(Math.abs(range[0]-range[2])+1,Math.abs(range[1]-range[3])+1)
@@ -225,7 +213,6 @@ class jsxl {
 				
 		return ret
 	}
-
 	SUM(startcord, endcord) {
 		var arr=this.unpack(startcord, endcord)
 		var total=0
