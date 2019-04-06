@@ -132,7 +132,7 @@ class jsxl {
 
 		//does top header
 		//var temptr=document.createElement("tr")
-		var temptr=nu("tr", {})
+		var temptr=nu("tr")
 		for (var i=0;i<=this.COLS+1;i++) {
 			var tempth=document.createElement("th")
 			if (i==0) { //if its 0, print an 'x'
@@ -169,7 +169,7 @@ class jsxl {
 					})
 				}
 				else if (x==0 && y==this.ROWS) { //only prints table adder/remover
-					var temptd=nu("th", {})
+					var temptd=nu("th")
 					nu("span", {
 						"innerHTML": "-<br>",
 						"onclick": ()=>this.resize(-1, 0)
@@ -181,7 +181,7 @@ class jsxl {
 					}, temptd)
 				}
 				else if (y!=this.ROWS) { //else just print the inner input boxes
-					var temptd=nu("td", {})
+					var temptd=nu("td")
 
 					nu("input", {
 						"id": "JSXL_"+y+":"+(x-1),
